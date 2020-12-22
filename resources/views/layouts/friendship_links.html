@@ -1,0 +1,21 @@
+<div class="panel panel-default">
+    <div class="panel-heading">友情链接</div>
+
+    <table class="table friendship-link">
+        <tbody>
+        {{ range $links := .FriendshipLinks }}
+        <tr>
+            {{ range $link := $links }}
+            <td>
+                <a href="{{ $link.Link }}" title="{{ $link.Title }}" target="_blank">
+                    {{ $link.Title }}
+                </a>
+            </td>
+            {{ end }}
+        </tr>
+        {{ end }}
+        </tbody>
+
+    </table>
+</div>
+

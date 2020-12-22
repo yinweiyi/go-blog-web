@@ -1,0 +1,15 @@
+<div class="panel panel-default">
+    <div class="panel-heading"> 最近热门</div>
+    <ul class="list-group">
+        {{ range $hots := .Hots}}
+        <li class="list-group-item">
+            <a href="/articles/{{ $hots.Slug }}" rel="bookmark"
+               title="详细阅读 {{ $hots.Title }}">
+                {{ $hots.ShortTitle }}
+            </a>
+        </li>
+        {{ end }}
+
+    </ul>
+</div>
+

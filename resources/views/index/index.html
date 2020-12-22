@@ -1,0 +1,45 @@
+{{template "master.html" .}}
+
+{{ define "title"}}
+测试
+{{end}}
+
+{{ define "container"}}
+<div class="row">
+    <div class="col-md-8">
+        {{ if gt .Sentence.ID 0 }}
+        <div class="well quote">
+                <span class="quote-headtips" style="color: rgb(72, 175, 124);">每日一句 ( {{ .Sentence.CreatedAt | formatAsDate }} ) &nbsp;
+                    <span class="glyphicon glyphicon-bullhorn"></span>
+                </span>
+            <p>{{ .Sentence.Content }}</p>
+            <p>{{ .Sentence.Translation }}<span class="pull-right">———— {{ .Sentence.Author }}</span></p>
+        </div>
+        {{ end }}
+
+        {{ range $article := .Articles }}
+        <div class="panel panel-index-left">
+            <div class="panel-body">
+                <h2 class="blog-post-title">
+                    <a href="/articles/{{ $article.Slug }}">{{ $article.Title }}</a>
+                </h2>
+                <p> {{ $article.ShortHtml }}</p>
+            </div>
+            <div class="panel-footer">发布于{{ $article.CreatedAt | formatAsDate }}&nbsp;|&nbsp;
+                浏览：{{ $article.Views }}&nbsp; &nbsp;Tags：
+                {{ range $tag := $article.Tags }}
+                <a href="/tags/{{ $tag.Slug }}" rel="tag">{{ $tag.Name }}</a>
+                {{ end }}
+            </div>
+        </div>
+
+        {{ end }}
+    </div>
+    <div class="col-md-4">
+        {{template "tags.html" .}}
+        {{template "hots.html" .}}
+        {{template "newest_comments.html" .}}
+        {{template "friendship_links.html" .}}
+    </div>
+</div>
+{{ end }}
