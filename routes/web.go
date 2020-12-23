@@ -11,4 +11,5 @@ func RegisterWebRoute(engine *gin.Engine) {
 	index := new(controllers.IndexController)
 	engine.GET("/", index.Index)
 	engine.GET("/category/:slug", index.Category)
+	engine.GET("/tag/:slug", index.Tag)
 }

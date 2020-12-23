@@ -23,15 +23,29 @@ func (i *IndexController) Index(ctx *gin.Context) {
 
 func (i *IndexController) Category(ctx *gin.Context) {
 	slug := ctx.Param("slug")
-	cate := new(services.CategoryService).GetBySlug(slug)
+	cate, err := new(services.CategoryService).GetBySlug(slug)
+	if err != nil {
+		i.rendor(ctx, []models.Article{}, pagination.PagerData{})
+	} else {
+		articles, pagerData, err := new(services.ArticleService).GetAll(ctx.Request, 5, map[string]interface{}{"category_id": cate.ID})
+		i.FailOnError(ctx, err)
+		i.rendor(ctx, articles, pagerData)
+	}
 
-	articles, pagerData, err := new(services.ArticleService).GetAll(ctx.Request, 5, map[string]interface{}{"category_id": cate.ID})
-	i.FailOnError(ctx, err)
-	i.rendor(ctx, articles, pagerData)
 }
 
-func (i *IndexController) tag(ctx *gin.Context) {
-	//slug := ctx.Param("slug")
+func (i *IndexController) Tag(ctx *gin.Context) {
+	slug := ctx.Param("slug")
+	tagService := new(services.TagService)
+
+	tag, err := tagService.GetBySlug(slug)
+	if err != nil {
+		i.rendor(ctx, []models.Article{}, pagination.PagerData{})
+	} else {
+		articles, pagerData, err := tagService.GetArticlesByTag(ctx.Request, tag, 5)
+		i.FailOnError(ctx, err)
+		i.rendor(ctx, articles, pagerData)
+	}
 }
 
 func (i *IndexController) rendor(ctx *gin.Context, articles []models.Article, pagerData pagination.PagerData) {

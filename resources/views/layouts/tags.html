@@ -2,7 +2,7 @@
     <div class="panel-heading"> 随机标签云</div>
     <div class="panel-body tagcloud">
         {{ range $tag := .MinTags}}
-        <a href="/tags/{{ $tag.Slug }}" class="tag-cloud-link tag-link-13 tag-link-position-1"
+        <a href="/tag/{{ $tag.Slug }}" class="tag-cloud-link tag-link-13 tag-link-position-1"
            style="color: {{ randomColor }};font-size: {{ randomInt 8 18 }}pt;" aria-label="">
             {{ $tag.Name }}
         </a>

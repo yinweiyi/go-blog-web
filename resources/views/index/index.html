@@ -28,7 +28,7 @@
             <div class="panel-footer">发布于{{ $article.CreatedAt | formatAsDate }}&nbsp;|&nbsp;
                 浏览：{{ $article.Views }}&nbsp; &nbsp;Tags：
                 {{ range $tag := $article.Tags }}
-                <a href="/tags/{{ $tag.Slug }}" rel="tag">{{ $tag.Name }}</a>
+                <a href="/tag/{{ $tag.Slug }}" rel="tag">{{ $tag.Name }}</a>
                 {{ end }}
             </div>
         </div>

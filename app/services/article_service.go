@@ -23,7 +23,7 @@ func (ArticleService) Get(idStr string) models.Article {
 func (ArticleService) GetAll(r *http.Request, perPage int, where map[string]interface{}) ([]models.Article, pagination.PagerData, error) {
 	// 1. 初始化分页实例
 	db := model.DB.Preload("Tags").Model(models.Article{}).Where(where).Order("is_top desc, `order`")
-	_pager := pagination.New(r, db, perPage)
+	_pager := pagination.New(r, db, perPage, "")
 
 	// 2. 获取视图数据
 	PagerData := _pager.Paging()

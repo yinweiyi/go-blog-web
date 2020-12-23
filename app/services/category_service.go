@@ -14,9 +14,9 @@ func (CategoryService) GetAll() []models.Category {
 	return category
 }
 
-func (CategoryService) GetBySlug(slug string) models.Category {
+func (CategoryService) GetBySlug(slug string) (models.Category, error) {
 	var category models.Category
 
-	model.DB.Select([]string{"id", "name"}).First(&category, map[string]interface{}{"slug": slug})
-	return category
+	err := model.DB.Select([]string{"id", "name"}).First(&category, map[string]interface{}{"slug": slug}).Error
+	return category, err
 }

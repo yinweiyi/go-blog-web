@@ -3,9 +3,11 @@ package pagination
 import (
 	"blog/vendors/config"
 	"blog/vendors/types"
-	"gorm.io/gorm"
 	"math"
 	"net/http"
+	"strings"
+
+	"gorm.io/gorm"
 )
 
 // PageData 同视图渲染的数据
@@ -22,17 +24,19 @@ type PagerData struct {
 
 // Pagination 分页对象
 type Pagination struct {
-	PerPage int
-	Page    int
-	Count   int64
-	db      *gorm.DB
+	PerPage     int
+	Page        int
+	Count       int64
+	db          *gorm.DB
+	association string
 }
 
 // New 分页对象构建器
 // r —— 用来获取分页的 URL 参数，默认是 page，可通过 config/pagination.go 修改
 // db —— GORM 查询句柄，用以查询数据集和获取数据总数
 // PerPage —— 每页条数，传参为小于或者等于 0 时为默认值  10，可通过 config/pagination.go 修改
-func New(r *http.Request, db *gorm.DB, PerPage int) *Pagination {
+// association —— 关联的对象
+func New(r *http.Request, db *gorm.DB, PerPage int, association string) *Pagination {
 
 	// 默认每页数量
 	if PerPage <= 0 {
@@ -41,10 +45,11 @@ func New(r *http.Request, db *gorm.DB, PerPage int) *Pagination {
 
 	// 实例对象
 	p := &Pagination{
-		db:      db,
-		PerPage: PerPage,
-		Page:    1,
-		Count:   -1,
+		db:          db,
+		PerPage:     PerPage,
+		Page:        1,
+		Count:       -1,
+		association: association,
 	}
 
 	// 设置当前页码
@@ -100,6 +105,9 @@ func (p Pagination) Results(data interface{}) error {
 		offset = (page - 1) * p.PerPage
 	}
 
+	if p.isNotAssociated() {
+		return p.db.Limit(p.PerPage).Offset(offset).Association(p.association).Find(data)
+	}
 	return p.db.Limit(p.PerPage).Offset(offset).Find(data).Error
 }
 
@@ -107,8 +115,13 @@ func (p Pagination) Results(data interface{}) error {
 func (p *Pagination) TotalCount() int64 {
 	if p.Count == -1 {
 		var count int64
-		if err := p.db.Count(&count).Error; err != nil {
-			return 0
+
+		if p.isNotAssociated() {
+			count = p.db.Association(p.association).Count()
+		} else {
+			if err := p.db.Count(&count).Error; err != nil {
+				return 0
+			}
 		}
 		p.Count = count
 	}
@@ -204,4 +217,9 @@ func (p Pagination) GetPageFromRequest(r *http.Request) int {
 		return 1
 	}
 	return pageInt
+}
+
+//isNotAssociated 是否未关联
+func (p *Pagination) isNotAssociated() bool {
+	return p.association != "" && strings.ToLower(p.association) != p.db.Statement.Table
 }
