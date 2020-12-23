@@ -1,0 +1,44 @@
+{{template "master.html" .}}
+
+{{ define "css"}}
+    <link rel="stylesheet" href="/assets/plugins/highlight/styles/atelier-dune-dark.css">
+{{ end }}
+
+{{ define "container"}}
+<div class="row">
+    <div class="col-md-8">
+        <div id="article" class="well"> 当前位置：
+            <a href="/" title="{{ .Config.Title }}">博客首页</a>&gt;&gt;
+            <a href="/category/{{ .Article.Category.Slug }}">{{ .Article.Category.Name }}</a>
+            &gt;&gt; 阅读正文
+            <h2 class="blog-post-title">
+                {{ .Article.Title }}
+            </h2>
+            <p class="info"><span class="meat_span">作者: {{ .Article.Author }}</span>
+                <span class="meat_span">分类:
+                        <a href="/category/{{ .Article.Category.Slug }}"
+                           rel="category tag">{{ .Article.Category.Name }}</a>
+                    </span> <span class="meat_span">发布于: {{ .Article.CreatedAt | formatAsDate }}</span>
+                <span class="meat_span">浏览：{{ .Article.Views }} }}</span>
+                <span class="meat_span">
+                        <a href="/">评论(0)</a>
+                </span>
+            </p>
+            <hr>
+            <div class="text">
+                {{ .Article.Html | unescaped }}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        {{template "tags.html" .}}
+        {{template "hots.html" .}}
+        {{template "newest_comments.html" .}}
+    </div>
+</div>
+{{ end }}
+
+{{ define "js" }}
+<script src="/assets/plugins/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+{{ end }}

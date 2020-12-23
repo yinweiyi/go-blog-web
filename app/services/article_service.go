@@ -4,7 +4,6 @@ import (
 	"blog/app/models"
 	"blog/vendors/model"
 	"blog/vendors/pagination"
-	"blog/vendors/types"
 	"net/http"
 )
 
@@ -12,11 +11,10 @@ type ArticleService struct {
 }
 
 // Get 通过 ID 获取文章
-func (ArticleService) Get(idStr string) models.Article {
+func (ArticleService) GetBySlug(slug string) (models.Article, error) {
 	var article models.Article
-	id := types.StringToInt(idStr)
-	model.DB.First(&article, id)
-	return article
+	err := model.DB.Preload("Category").First(&article, map[string]interface{}{"slug": slug}).Error
+	return article, err
 }
 
 // GetAll 获取全部文章

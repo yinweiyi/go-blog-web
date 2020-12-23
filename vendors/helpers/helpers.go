@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"fmt"
+	"html/template"
 	"math/rand"
 	"strings"
 	"time"
@@ -69,4 +70,9 @@ func Chuck(size int) [][]int {
 		arr = arr[size:]
 	}
 	return result
+}
+
+//Unescaped
+func Unescaped(x string) interface{} {
+	return template.HTML(x)
 }

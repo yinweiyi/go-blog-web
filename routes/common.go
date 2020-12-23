@@ -2,12 +2,13 @@ package routes
 
 import (
 	"blog/vendors/helpers"
-	"github.com/gin-contrib/multitemplate"
-	"github.com/gin-gonic/gin"
-	strip "github.com/grokify/html-strip-tags-go"
 	"html/template"
 	"path/filepath"
 	"strings"
+
+	"github.com/gin-contrib/multitemplate"
+	"github.com/gin-gonic/gin"
+	strip "github.com/grokify/html-strip-tags-go"
 )
 
 func RegisterCommonFile(engine *gin.Engine) {
@@ -41,6 +42,7 @@ func loadTemplates(templatesDir string) multitemplate.Renderer {
 			"randomInt":    helpers.RandomInt,
 			"formatAsDate": helpers.FormatAsDate,
 			"stripTags":    strip.StripTags,
+			"unescaped":    helpers.Unescaped,
 		}, files...)
 	}
 	return r
