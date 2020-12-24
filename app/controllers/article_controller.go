@@ -18,7 +18,8 @@ func (i *ArticleController) Show(ctx *gin.Context) {
 	articleService := new(services.ArticleService)
 	article, err := articleService.GetBySlug(slug)
 	i.FailOnError(ctx, err)
-
+	articleService.Read(article)
+	article.Views += 1
 	config, err := configRedis.Get()
 	i.FailOnError(ctx, err)
 	ctx.HTML(200, "article/show.html", gin.H{

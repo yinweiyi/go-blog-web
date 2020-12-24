@@ -5,6 +5,8 @@ import (
 	"blog/vendors/model"
 	"blog/vendors/pagination"
 	"net/http"
+
+	"gorm.io/gorm"
 )
 
 type ArticleService struct {
@@ -15,6 +17,11 @@ func (ArticleService) GetBySlug(slug string) (models.Article, error) {
 	var article models.Article
 	err := model.DB.Preload("Category").First(&article, map[string]interface{}{"slug": slug}).Error
 	return article, err
+}
+
+//Read增加阅读数
+func (a ArticleService) Read(article models.Article) {
+	model.DB.Model(&article).UpdateColumn("views", gorm.Expr("views + ?", 1))
 }
 
 func (a ArticleService) Last(article models.Article) models.Article {

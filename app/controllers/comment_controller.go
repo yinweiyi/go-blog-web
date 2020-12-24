@@ -1,13 +1,13 @@
 package controllers
 
-type CommentModel struct {
+type Comment struct {
 	Captcha Captcha
 	ID      uint
 	Type    string
 }
 
-func NewCommentModel(id uint, t string) CommentModel {
-	return CommentModel{
+func NewCommentModel(id uint, t string) Comment {
+	return Comment{
 		Captcha: new(CaptchaController).Get(),
 		ID:      id,
 		Type:    t,
