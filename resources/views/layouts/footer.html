@@ -1,6 +1,3 @@
-{{template "master.html" .}}
-
-{{ define "footer" }}
 <footer class="footer">
     <ul class="list-inline">
         {{ range $category := .Categories }}
@@ -14,5 +11,3 @@
         <a href="http://www.beian.miit.gov.cn/" target="_blank" rel="nofollow">{{ .Config.Icp }}</a>
     </p>
 </footer>
-
-{{end}}

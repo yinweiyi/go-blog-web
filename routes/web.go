@@ -17,4 +17,8 @@ func RegisterWebRoute(engine *gin.Engine) {
 	article := new(controllers.ArticleController)
 	engine.GET("/articles/:slug", article.Show)
 
+	//验证码
+	captcha := new(controllers.CaptchaController)
+	engine.GET("/captcha/:captchaId", captcha.Captcha)
+
 }

@@ -1,7 +1,7 @@
 {{template "master.html" .}}
 
 {{ define "css"}}
-    <link rel="stylesheet" href="/assets/plugins/highlight/styles/atelier-dune-dark.css">
+<link rel="stylesheet" href="/assets/plugins/highlight/styles/atelier-dune-dark.css">
 {{ end }}
 
 {{ define "container"}}
@@ -19,7 +19,7 @@
                         <a href="/category/{{ .Article.Category.Slug }}"
                            rel="category tag">{{ .Article.Category.Name }}</a>
                     </span> <span class="meat_span">发布于: {{ .Article.CreatedAt | formatAsDate }}</span>
-                <span class="meat_span">浏览：{{ .Article.Views }} }}</span>
+                <span class="meat_span">浏览：{{ .Article.Views }}</span>
                 <span class="meat_span">
                         <a href="/">评论(0)</a>
                 </span>
@@ -29,6 +29,19 @@
                 {{ .Article.Html | unescaped }}
             </div>
         </div>
+        <ul class="pager post-pager">
+            {{ if gt .Last.ID 0 }}
+            <li class="previous">
+                <a href="/articles/{{ .Last.Slug }}" rel="prev">上一篇</a>
+            </li>
+            {{ end }}
+            {{ if gt .Next.ID 0 }}
+            <li class="next">
+                <a href="/articles/{{ .Next.Slug }}" rel="next">下一篇</a>
+            </li>
+            {{ end }}
+        </ul>
+        {{template "comment" .CommentArgs }}
     </div>
     <div class="col-md-4">
         {{template "tags.html" .}}

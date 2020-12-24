@@ -17,6 +17,19 @@ func (ArticleService) GetBySlug(slug string) (models.Article, error) {
 	return article, err
 }
 
+func (a ArticleService) Last(article models.Article) models.Article {
+	var last models.Article
+	model.DB.Where("id < ?", article.ID).Select([]string{"id", "slug", "title"}).Order("id desc").First(&last)
+	return last
+}
+
+//Next
+func (a ArticleService) Next(article models.Article) models.Article {
+	var next models.Article
+	model.DB.Where("id > ?", article.ID).Select([]string{"id", "slug", "title"}).Order("id").First(&next)
+	return next
+}
+
 // GetAll 获取全部文章
 func (ArticleService) GetAll(r *http.Request, perPage int, where map[string]interface{}) ([]models.Article, pagination.PagerData, error) {
 	// 1. 初始化分页实例

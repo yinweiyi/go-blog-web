@@ -17,15 +17,16 @@
     <script src="/assets/js/ie-emulation-modes-warning.js"></script>
 </head>
 <body>
-{{block "nav" .}} {{end}}
+{{template "nav.html" .}}
 <div class="container main">
     {{block "container" .}} {{end}}
 </div>
-{{block "footer" .}} {{end}}
+{{template "footer.html" .}}
 <script src="/assets/js/jquery.min.js"></script>
 <script src="/assets/js/bootstrap.min.js"></script>
 <script src="/assets/js/ie10-viewport-bug-workaround.js"></script>
 <script src="/assets/js/zx.js"></script>
 {{block "js" .}} {{end}}
+{{block "js-sub" .}} {{end}}
 </body>
 </html>

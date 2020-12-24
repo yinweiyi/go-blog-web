@@ -22,6 +22,8 @@ func RegisterCommonFile(engine *gin.Engine) {
 //加载公共模板
 func loadTemplates(templatesDir string) multitemplate.Renderer {
 	r := multitemplate.NewRenderer()
+	//Master template must render at first
+	masterFile := []string{templatesDir + "/master.html"}
 
 	layouts, err := filepath.Glob(templatesDir + "/layouts/*.html")
 	if err != nil {
@@ -36,7 +38,7 @@ func loadTemplates(templatesDir string) multitemplate.Renderer {
 	for _, include := range includes {
 		layoutCopy := make([]string, len(layouts))
 		copy(layoutCopy, layouts)
-		files := append(layoutCopy, include)
+		files := append(masterFile, append(layoutCopy, include)...)
 		r.AddFromFilesFuncs(fileName(include), template.FuncMap{
 			"randomColor":  helpers.RandomColor,
 			"randomInt":    helpers.RandomInt,
