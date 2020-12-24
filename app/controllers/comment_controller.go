@@ -6,11 +6,11 @@ type Comment struct {
 	Type    string
 }
 
-func NewCommentModel(id uint, t string) Comment {
+func NewCommentModel(id uint, types string) Comment {
 	return Comment{
 		Captcha: new(CaptchaController).Get(),
 		ID:      id,
-		Type:    t,
+		Type:    types,
 	}
 }
 
