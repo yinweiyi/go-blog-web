@@ -31,7 +31,7 @@ func (i *ArticleController) Show(ctx *gin.Context) {
 		"Last":            articleService.Last(article),
 		"Next":            articleService.Next(article),
 		"MinTags":         models.Shuffle(new(services.TagService).MinTags()),
-		"Hots":            new(services.ArticleService).Hots(10),
+		"Hots":            articleService.Hots(10),
 		"FriendshipLinks": new(services.FriendshipLinkService).Chuck(2),
 		"Categories":      new(services.CategoryService).GetAll(),
 		"CommentArgs":     NewCommentModel(article.ID, "article"),
