@@ -3,9 +3,10 @@ package controllers
 import (
 	"blog/vendors/logger"
 	"fmt"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"net/http"
 )
 
 type BaseController struct {
@@ -25,4 +26,20 @@ func (bc BaseController) FailOnError(ctx *gin.Context, err error) {
 			panic(fmt.Sprintf("%s", err))
 		}
 	}
+}
+
+func (bc BaseController) Success(ctx *gin.Context, message string, data interface{}) {
+	ctx.JSON(200, gin.H{
+		"code":    200,
+		"message": message,
+		"data":    data,
+	})
+}
+
+func (bc BaseController) Error(ctx *gin.Context, message string, data interface{}) {
+	ctx.JSON(200, gin.H{
+		"code":    400,
+		"message": message,
+		"data":    data,
+	})
 }

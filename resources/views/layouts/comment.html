@@ -103,7 +103,7 @@
                 nickname: nickname,
                 content: content,
                 captcha: captcha,
-                captchaId: this.captchaId
+                captcha_id: this.captchaId
             };
 
             let email = $('#email').val();
@@ -113,7 +113,7 @@
 
             $.ajax({
                 //TODO 地址
-                url: '/',
+                url: '/comment',
                 type: 'post',
                 dataType: 'json',
                 data: data,

@@ -21,4 +21,8 @@ func RegisterWebRoute(engine *gin.Engine) {
 	captcha := new(controllers.CaptchaController)
 	engine.GET("/captcha/:captchaId", captcha.Captcha)
 
+	//评论
+	comment := new(controllers.CommentController)
+	engine.POST("/comment", comment.Comment)
+
 }

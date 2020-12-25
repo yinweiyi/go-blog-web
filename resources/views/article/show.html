@@ -21,7 +21,7 @@
                     </span> <span class="meat_span">发布于: {{ .Article.CreatedAt | formatAsDate }}</span>
                 <span class="meat_span">浏览：{{ .Article.Views }}</span>
                 <span class="meat_span">
-                        <a href="/">评论(0)</a>
+                        <a href="/">评论({{ .CommentCount }})</a>
                 </span>
             </p>
             <hr>
@@ -41,6 +41,15 @@
             </li>
             {{ end }}
         </ul>
+
+
+        {{if gt .CommentCount 0}}
+        <div id="comments" style="height: auto !important;">
+            <h3> {{ .Article.Title }} : 目前有 {{ .CommentCount }} 条评论</h3>
+            {{template "comments" .CommentTree }}
+        </div>
+        {{end}}
+
         {{template "comment" .CommentArgs }}
     </div>
     <div class="col-md-4">

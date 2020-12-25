@@ -13,6 +13,8 @@ type ArticleController struct {
 }
 
 func (i *ArticleController) Show(ctx *gin.Context) {
+	commentService := new(services.CommentService)
+	commentTree, commentPageData := commentService.GetTree(ctx.Request, 5, 1, "article")
 	slug := ctx.Param("slug")
 
 	articleService := new(services.ArticleService)
@@ -33,5 +35,8 @@ func (i *ArticleController) Show(ctx *gin.Context) {
 		"FriendshipLinks": new(services.FriendshipLinkService).Chuck(2),
 		"Categories":      new(services.CategoryService).GetAll(),
 		"CommentArgs":     NewCommentModel(article.ID, "article"),
+		"CommentCount":    commentService.Count(article.ID, "article"),
+		"CommentTree":     commentTree,
+		"CommentPageData": commentPageData,
 	})
 }

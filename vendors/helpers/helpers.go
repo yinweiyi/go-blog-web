@@ -76,3 +76,12 @@ func Chuck(size int) [][]int {
 func Unescaped(x string) interface{} {
 	return template.HTML(x)
 }
+
+func ArrayContain(arr []int, item int) bool {
+	for _, d := range arr {
+		if d == item {
+			return true
+		}
+	}
+	return false
+}

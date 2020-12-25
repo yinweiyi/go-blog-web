@@ -1,0 +1,36 @@
+{{define "comments"}}
+
+{{range $comment := .  }}
+<div class="alert alert-info comments-list" id="comment-{{ $comment.ID }}">
+    <div id="div-comment-4942">
+        <div class="comment-author vcard">
+            <img src="{{ $comment.Avatar }}" alt="用户评论头像" class="img-circle">
+            <strong>
+                {{if eq $comment.IsAdminReply  1}}
+
+                <a href="/" rel="external nofollow ugc" class="url">{{ $comment.Nickname }}</a>
+                {{else}}
+                    {{ $comment.Nickname }}
+                {{end}}
+            </strong>：
+            <span class="datetime">发表于  {{ $comment.CreatedAt }}
+                <span class="reply">
+                    <a rel="nofollow" class="comment-reply-link" href="#respond"
+                       data-id="{{ $comment.ID }}" aria-label="回复给{{ $comment.Nickname }}">[回复]</a>
+                </span>
+            </span>
+        </div>
+        <p>{{ $comment.Content }}</p>
+        <div class="clear"></div>
+    </div>
+    {{ with len $comment.Children }}
+        {{if gt . 0}}
+        <ul class="children">
+            {{ template "comments" $comment.Children}}
+        </ul><!-- .children -->
+        {{end}}
+    {{end}}
+</div>
+{{end}}
+
+{{end}}
