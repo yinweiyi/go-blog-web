@@ -28,6 +28,7 @@ func (bc BaseController) FailOnError(ctx *gin.Context, err error) {
 	}
 }
 
+//Success 返回成功json
 func (bc BaseController) Success(ctx *gin.Context, message string, data interface{}) {
 	ctx.JSON(200, gin.H{
 		"code":    200,
@@ -36,6 +37,7 @@ func (bc BaseController) Success(ctx *gin.Context, message string, data interfac
 	})
 }
 
+//Error 返回失败json
 func (bc BaseController) Error(ctx *gin.Context, message string, data interface{}) {
 	ctx.JSON(200, gin.H{
 		"code":    400,

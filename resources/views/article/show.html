@@ -21,7 +21,7 @@
                     </span> <span class="meat_span">发布于: {{ .Article.CreatedAt | formatAsDate }}</span>
                 <span class="meat_span">浏览：{{ .Article.Views }}</span>
                 <span class="meat_span">
-                        <a href="/">评论({{ .CommentCount }})</a>
+                        <a href="/articles/{{ .Article.Slug }}#comments">评论({{ .CommentCount }})</a>
                 </span>
             </p>
             <hr>
