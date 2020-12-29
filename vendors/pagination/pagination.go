@@ -3,6 +3,7 @@ package pagination
 import (
 	"blog/vendors/config"
 	"blog/vendors/types"
+	"fmt"
 	"math"
 	"net/http"
 	"strings"
@@ -20,6 +21,8 @@ type PagerData struct {
 	TotalCount int64
 	// 总页数
 	TotalPage int
+	// 基础路径
+	BaseUrl string
 }
 
 // Pagination 分页对象
@@ -29,6 +32,7 @@ type Pagination struct {
 	Count       int64
 	db          *gorm.DB
 	association string
+	baseUrl     string
 }
 
 // New 分页对象构建器
@@ -37,7 +41,6 @@ type Pagination struct {
 // PerPage —— 每页条数，传参为小于或者等于 0 时为默认值  10，可通过 config/pagination.go 修改
 // association —— 关联的对象
 func New(r *http.Request, db *gorm.DB, PerPage int, association string) *Pagination {
-
 	// 默认每页数量
 	if PerPage <= 0 {
 		PerPage = config.GetInt("pagination.perPage")
@@ -50,7 +53,9 @@ func New(r *http.Request, db *gorm.DB, PerPage int, association string) *Paginat
 		Page:        1,
 		Count:       -1,
 		association: association,
+		baseUrl:     getBaseUrl(r),
 	}
+	fmt.Println(p.baseUrl)
 
 	// 设置当前页码
 	p.SetPage(p.GetPageFromRequest(r))
@@ -60,12 +65,12 @@ func New(r *http.Request, db *gorm.DB, PerPage int, association string) *Paginat
 
 // Paging 返回渲染分页所需的数据
 func (p *Pagination) Paging() PagerData {
-
 	return PagerData{
 		CurrentPage: p.Page,
 		PerPage:     p.PerPage,
 		TotalCount:  p.TotalCount(),
 		TotalPage:   p.TotalPage(),
+		BaseUrl:     p.baseUrl,
 	}
 }
 
@@ -222,4 +227,16 @@ func (p Pagination) GetPageFromRequest(r *http.Request) int {
 //isNotAssociated 是否未关联
 func (p *Pagination) isNotAssociated() bool {
 	return p.association != "" && strings.ToLower(p.association) != p.db.Statement.Table
+}
+
+//isNotAssociated 是否未关联
+func getBaseUrl(r *http.Request) string {
+	var query []string
+
+	for key, value := range r.URL.Query() {
+		if key != config.GetString("pagination.url_query") {
+			query = append(query, key+"="+value[0])
+		}
+	}
+	return strings.Join(query, "&")
 }

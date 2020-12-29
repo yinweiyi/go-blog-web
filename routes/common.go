@@ -16,7 +16,6 @@ func RegisterCommonFile(engine *gin.Engine) {
 	engine.Static("/assets", "./public")
 	//加载公共模板
 	engine.HTMLRender = loadTemplates("./resources/views")
-
 }
 
 //加载公共模板

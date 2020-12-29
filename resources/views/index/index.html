@@ -28,8 +28,10 @@
                 {{ end }}
             </div>
         </div>
-
         {{ end }}
+        <ul class="pagination">
+            {{template "pagination" .}}
+        </ul>
     </div>
     <div class="col-md-4">
         {{template "tags.html" .}}

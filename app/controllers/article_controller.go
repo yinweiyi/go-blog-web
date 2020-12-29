@@ -40,5 +40,6 @@ func (i *ArticleController) Show(ctx *gin.Context) {
 		"CommentTree":     commentTree,
 		"CommentPageData": commentPageData,
 		"NewestComments":  commentService.News(),
+		"NavActive":       "",
 	})
 }
