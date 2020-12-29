@@ -31,7 +31,7 @@ func CreatePaginator(data PagerData, onEachSide int) *Paginator {
 }
 
 func (p *Paginator) Links() []Link {
-	links := []Link{{Url: p.PrevUrl(), Label: "<", Active: false}}
+	links := []Link{{Url: p.PrevUrl(), Label: "‹", Active: false}}
 	slider := p.Slider()
 
 	links = append(links, p.RangeLinks(slider.first)...)
@@ -47,6 +47,7 @@ func (p *Paginator) Links() []Link {
 		}
 		links = append(links, p.RangeLinks(slider.last)...)
 	}
+	links = append(links, Link{Url: "", Label: "›", Active: false})
 	return links
 }
 
