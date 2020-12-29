@@ -1,0 +1,37 @@
+{{template "master.html" .}}
+
+{{ define "container"}}
+<div class="row">
+    <div class="col-md-8 blog-main">
+        {{ $aboutCount := len .Abouts }}
+        <div id="article" class="well">
+            {{if gt $aboutCount 0}}
+                {{range $about := .Abouts}}
+                    <h2><strong>{{ $about.Title }}</strong></h2>
+                    <hr>
+                    {{ $about.Html | unescaped }}
+                {{end}}
+            {{else}}
+                 暂无关于
+            {{end}}
+        </div><!-- /.blog-main -->
+
+        {{if gt $aboutCount 0}}
+            {{if gt .CommentCount 0}}
+                <div id="comments" style="height: auto !important;">
+                    <h3> 关于 : 目前有 {{ .CommentCount }} 条评论</h3>
+                    {{template "comments" .CommentTree }}
+                </div>
+            {{end}}
+
+            {{template "comment" .CommentArts }}
+        {{end}}
+    </div>
+    <div class="col-md-4">
+        {{template "tags.html" .}}
+        {{template "hots.html" .}}
+        {{template "newest_comments.html" .}}
+    </div>
+
+</div><!-- /.row -->
+{{ end }}

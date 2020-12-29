@@ -36,7 +36,7 @@
                                tabindex="4" placeholder="验证码">
                     </div>
                     <div class="col-xs-6" style="padding-left: 0px">
-                        <img id="zh-vm" src="{{ .Captcha.ImageUrl }}" class="img-rounded" title="refresh captcha"
+                        <img id="zh-vm" src="" class="img-rounded" title="refresh captcha"
                              alt="captcha"
                              onclick="comment.refreshCaptcha()"
                              style="vertical-align:middle;">
@@ -69,6 +69,7 @@
         init: function () {
             $('#nickname').val(window.localStorage.getItem('nickname'));
             $('#email').val(window.localStorage.getItem('email'));
+            $('#zh-vm').attr('src', this.captchaUrl)
         },
         refreshCaptcha: function () {
             let imageUrl = this.captchaUrl + "?reload=1&r=" + Math.random()

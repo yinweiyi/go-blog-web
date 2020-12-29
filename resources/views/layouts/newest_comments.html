@@ -1,20 +1,23 @@
+{{$le:= len .NewestComments}}
+{{ if gt $le 0 }}
 <div class="panel panel-default">
     <div class="panel-heading"> 最新评论</div>
     <ul class="list-group">
-
+        {{range $comment := .NewestComments}}
         <li class="list-group-item sidebar-comments-list-item">
             <div class="list-group-item-heading">
-                <span class="comment-author">张三</span>
-                <span class="pull-right">[2020-12-03]</span>
+                <span class="comment-author">{{ $comment.Nickname }}</span>
+                <span class="pull-right">[{{ $comment.CreatedAt | formatAsDate }}]</span>
             </div>
             <div class="list-group-item-text">
-                <a href="/" title="评论来源: 留言"
+                <a href="/guestbook#comment-{{ $comment.ID }}" title="评论来源: 留言"
                    rel="nofollow">
-                    非常好的文章
+                    {{$comment.Content}}
                 </a>
             </div>
         </li>
-
+        {{end}}
     </ul>
 </div>
+{{end}}
 

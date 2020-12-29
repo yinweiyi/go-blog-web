@@ -18,7 +18,7 @@
                 <span class="meat_span">分类:
                         <a href="/category/{{ .Article.Category.Slug }}"
                            rel="category tag">{{ .Article.Category.Name }}</a>
-                    </span> <span class="meat_span">发布于: {{ .Article.CreatedAt | formatAsDate }}</span>
+                    </span> <span class="meat_span">发布于: {{ .Article.CreatedAt | formatAsDateTime }}</span>
                 <span class="meat_span">浏览：{{ .Article.Views }}</span>
                 <span class="meat_span">
                         <a href="/articles/{{ .Article.Slug }}#comments">评论({{ .CommentCount }})</a>

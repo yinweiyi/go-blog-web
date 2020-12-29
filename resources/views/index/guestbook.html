@@ -1,0 +1,32 @@
+{{template "master.html" .}}
+
+{{ define "container"}}
+<div class="row">
+    <div class="col-md-8 blog-main">
+        <div id="article" class="well">
+            {{if gt .Guestbook.ID 0}}
+                {{.Guestbook.Html | unescaped }}
+            {{else}}
+                欢迎灌水交流，别看我长时间不发博，博主可一直都在线~
+            {{end}}
+        </div><!-- /.blog-main -->
+
+        {{if gt .Guestbook.ID 0}}
+            {{if gt .CommentCount 0}}
+                <div id="comments" style="height: auto !important;">
+                    <h3> 关于 : 目前有 {{ .CommentCount }} 条评论</h3>
+                    {{template "comments" .CommentTree }}
+                </div>
+            {{end}}
+
+        {{template "comment" .CommentArts }}
+        {{end}}
+    </div>
+    <div class="col-md-4">
+        {{template "tags.html" .}}
+        {{template "hots.html" .}}
+        {{template "newest_comments.html" .}}
+    </div>
+
+</div><!-- /.row -->
+{{ end }}

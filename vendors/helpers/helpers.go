@@ -29,6 +29,11 @@ func FormatAsDate(t time.Time) string {
 	return fmt.Sprintf("%d-%02d-%02d", year, month, day)
 }
 
+//格式化时间
+func FormatAsDateTime(t time.Time) string {
+	return t.Format("2006-01-02 15:04:05")
+}
+
 //strip tag
 func Substr(str string, start, length int, suffix string) string {
 	if length == 0 {

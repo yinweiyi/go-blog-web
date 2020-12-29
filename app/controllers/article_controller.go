@@ -13,13 +13,14 @@ type ArticleController struct {
 }
 
 func (i *ArticleController) Show(ctx *gin.Context) {
-	commentService := new(services.CommentService)
-	commentTree, commentPageData := commentService.GetTree(ctx.Request, 5, 1, "article")
 	slug := ctx.Param("slug")
-
 	articleService := new(services.ArticleService)
 	article, err := articleService.GetBySlug(slug)
 	i.FailOnError(ctx, err)
+
+	commentService := new(services.CommentService)
+	commentTree, commentPageData := commentService.GetTree(ctx.Request, 5, int(article.ID), "article")
+
 	articleService.Read(article)
 	article.Views += 1
 	config, err := configRedis.Get()
@@ -38,5 +39,6 @@ func (i *ArticleController) Show(ctx *gin.Context) {
 		"CommentCount":    commentService.Count(article.ID, "article"),
 		"CommentTree":     commentTree,
 		"CommentPageData": commentPageData,
+		"NewestComments":  commentService.News(),
 	})
 }

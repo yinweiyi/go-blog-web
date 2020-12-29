@@ -12,6 +12,8 @@ func RegisterWebRoute(engine *gin.Engine) {
 	engine.GET("/", index.Index)
 	engine.GET("/category/:slug", index.Category)
 	engine.GET("/tag/:slug", index.Tag)
+	engine.GET("/about", index.About)
+	engine.GET("/guestbook", index.Guestbook)
 
 	//文章页
 	article := new(controllers.ArticleController)

@@ -40,11 +40,12 @@ func loadTemplates(templatesDir string) multitemplate.Renderer {
 		copy(layoutCopy, layouts)
 		files := append(masterFile, append(layoutCopy, include)...)
 		r.AddFromFilesFuncs(fileName(include), template.FuncMap{
-			"randomColor":  helpers.RandomColor,
-			"randomInt":    helpers.RandomInt,
-			"formatAsDate": helpers.FormatAsDate,
-			"stripTags":    strip.StripTags,
-			"unescaped":    helpers.Unescaped,
+			"randomColor":      helpers.RandomColor,
+			"randomInt":        helpers.RandomInt,
+			"formatAsDate":     helpers.FormatAsDate,
+			"formatAsDateTime": helpers.FormatAsDateTime,
+			"stripTags":        strip.StripTags,
+			"unescaped":        helpers.Unescaped,
 		}, files...)
 	}
 	return r

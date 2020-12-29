@@ -14,7 +14,9 @@ type CommentService struct {
 }
 
 var Types = map[string]string{
-	"article": "App\\Models\\Article",
+	"article":   "App\\Models\\Article",
+	"about":     "App\\Models\\About",
+	"guestbook": "App\\Models\\Guestbook",
 }
 
 //Comment 评论
@@ -60,6 +62,13 @@ func (c CommentService) GetById(parentId int) (models.Comment, error) {
 	var comment models.Comment
 	err := model.DB.First(&comment, parentId).Error
 	return comment, err
+}
+
+//News 最新评论
+func (c CommentService) News() []models.Comment {
+	var comments []models.Comment
+	model.DB.Where("commentable_type = ? and parent_id = ?", "App\\Models\\Guestbook", 0).Order("id desc").Limit(6).Find(&comments)
+	return comments
 }
 
 //Count 评论数
