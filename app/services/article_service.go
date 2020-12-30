@@ -24,14 +24,15 @@ func (a ArticleService) Read(article models.Article) {
 	model.DB.Model(&article).UpdateColumn("views", gorm.Expr("views + ?", 1))
 }
 
-func (a ArticleService) Last(article models.Article) models.Article {
+//Next
+func (a ArticleService) Next(article models.Article) models.Article {
 	var last models.Article
 	model.DB.Where("id < ?", article.ID).Select([]string{"id", "slug", "title"}).Order("id desc").First(&last)
 	return last
 }
 
-//Next
-func (a ArticleService) Next(article models.Article) models.Article {
+//Last
+func (a ArticleService) Last(article models.Article) models.Article {
 	var next models.Article
 	model.DB.Where("id > ?", article.ID).Select([]string{"id", "slug", "title"}).Order("id").First(&next)
 	return next
@@ -40,7 +41,7 @@ func (a ArticleService) Next(article models.Article) models.Article {
 // GetAll 获取全部文章
 func (ArticleService) GetAll(r *http.Request, perPage int, where map[string]interface{}) ([]models.Article, pagination.PagerData, error) {
 	// 1. 初始化分页实例
-	db := model.DB.Preload("Tags").Model(models.Article{}).Where(where).Order("is_top desc, `order`")
+	db := model.DB.Preload("Tags").Model(models.Article{}).Where(where).Order("is_top desc, id desc")
 	_pager := pagination.New(r, db, perPage, "", "")
 
 	// 2. 获取视图数据
