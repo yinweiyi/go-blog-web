@@ -21,7 +21,7 @@
                 </ul>
             {{end}}
 
-            {{if gt .Guestbook.CanComment 1}}
+            {{if gt .Guestbook.CanComment 0}}
                 {{template "comment" .CommentArts }}
             {{end}}
         </div>
