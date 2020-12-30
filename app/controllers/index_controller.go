@@ -6,7 +6,6 @@ import (
 	"blog/vendors/model"
 	"blog/vendors/pagination"
 	configRedis "blog/vendors/redis/config"
-	"fmt"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,7 +16,7 @@ type IndexController struct {
 
 func (i *IndexController) Index(ctx *gin.Context) {
 	var where map[string]interface{}
-	articles, pagerData, err := new(services.ArticleService).GetAll(ctx.Request, 1, where)
+	articles, pagerData, err := new(services.ArticleService).GetAll(ctx.Request, 5, where)
 	i.FailOnError(ctx, err)
 
 	i.rendor(ctx, articles, pagerData)
@@ -64,18 +63,20 @@ func (i *IndexController) About(ctx *gin.Context) {
 		commentTree, commentPageData = commentService.GetTree(ctx.Request, 5, int(aboutId), "about")
 	}
 
+	paginator := pagination.CreatePaginator(commentPageData, 4)
+
 	ctx.HTML(200, "index/about.html", gin.H{
-		"Config":          config,
-		"Abouts":          abouts,
-		"MinTags":         models.Shuffle(new(services.TagService).MinTags()),
-		"Hots":            new(services.ArticleService).Hots(10),
-		"CommentArgs":     NewCommentModel(aboutId, "about"),
-		"CommentCount":    commentService.Count(aboutId, "about"),
-		"CommentTree":     commentTree,
-		"CommentPageData": commentPageData,
-		"Categories":      new(services.CategoryService).GetAll(),
-		"NewestComments":  commentService.News(),
-		"NavActive":       "about",
+		"Config":         config,
+		"Abouts":         abouts,
+		"MinTags":        models.Shuffle(new(services.TagService).MinTags()),
+		"Hots":           new(services.ArticleService).Hots(10),
+		"CommentArgs":    NewCommentModel(aboutId, "about"),
+		"CommentCount":   commentService.Count(aboutId, "about"),
+		"CommentTree":    commentTree,
+		"PageLinks":      paginator.Links(),
+		"Categories":     new(services.CategoryService).GetAll(),
+		"NewestComments": commentService.News(),
+		"NavActive":      "about",
 	})
 }
 
@@ -95,18 +96,20 @@ func (i *IndexController) Guestbook(ctx *gin.Context) {
 		commentTree, commentPageData = commentService.GetTree(ctx.Request, 5, int(guestbookId), "guestbook")
 	}
 
+	paginator := pagination.CreatePaginator(commentPageData, 4)
+
 	ctx.HTML(200, "index/guestbook.html", gin.H{
-		"Config":          config,
-		"Guestbook":       guestbook,
-		"MinTags":         models.Shuffle(new(services.TagService).MinTags()),
-		"Hots":            new(services.ArticleService).Hots(10),
-		"CommentArgs":     NewCommentModel(guestbookId, "guestbook"),
-		"CommentCount":    commentService.Count(guestbookId, "guestbook"),
-		"CommentTree":     commentTree,
-		"CommentPageData": commentPageData,
-		"Categories":      new(services.CategoryService).GetAll(),
-		"NewestComments":  commentService.News(),
-		"NavActive":       "guestbook",
+		"Config":         config,
+		"Guestbook":      guestbook,
+		"MinTags":        models.Shuffle(new(services.TagService).MinTags()),
+		"Hots":           new(services.ArticleService).Hots(10),
+		"CommentArgs":    NewCommentModel(guestbookId, "guestbook"),
+		"CommentCount":   commentService.Count(guestbookId, "guestbook"),
+		"CommentTree":    commentTree,
+		"PageLinks":      paginator.Links(),
+		"Categories":     new(services.CategoryService).GetAll(),
+		"NewestComments": commentService.News(),
+		"NavActive":      "guestbook",
 	})
 }
 
@@ -116,7 +119,6 @@ func (i *IndexController) rendor(ctx *gin.Context, articles []models.Article, pa
 	i.FailOnError(ctx, err)
 
 	paginator := pagination.CreatePaginator(pagerData, 4)
-	fmt.Println(paginator.Links())
 	ctx.HTML(200, "index/index.html", gin.H{
 		"Config":          config,
 		"Sentence":        new(services.SentenceService).GetOne(),

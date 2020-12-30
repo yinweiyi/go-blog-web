@@ -42,15 +42,16 @@
             {{ end }}
         </ul>
 
-
-        {{if gt .CommentCount 0}}
         <div id="comments" style="height: auto !important;">
+        {{if gt .CommentCount 0}}
             <h3> {{ .Article.Title }} : 目前有 {{ .CommentCount }} 条评论</h3>
             {{template "comments" .CommentTree }}
-        </div>
+            <ul class="pagination">
+                {{template "pagination" .}}
+            </ul>
         {{end}}
-
         {{template "comment" .CommentArgs }}
+        </div>
     </div>
     <div class="col-md-4">
         {{template "tags.html" .}}

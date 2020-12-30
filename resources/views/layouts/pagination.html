@@ -1,12 +1,10 @@
 {{define "pagination" }}
 {{range $link := .PageLinks }}
 <li class="page-item {{if eq $link.Url ""}} disabled {{end}} {{if $link.Active}} active {{end}}" aria-disabled="true">
-    {{if eq $link.Url ""}}
+    {{if or (eq $link.Url "")  $link.Active }}
     <span class="page-link" aria-hidden="true">{{ $link.Label }}</span>
     {{else}}
-    <span class="page-link" aria-hidden="true">
-        <a class="page-link" href="/?{{ $link.Url | unescaped }}">{{ $link.Label }}</a>
-    </span>
+    <a class="page-link" href="{{ $link.Url }}">{{ $link.Label }}</a>
     {{end}}
 </li>
 {{end}}

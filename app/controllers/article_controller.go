@@ -3,6 +3,7 @@ package controllers
 import (
 	"blog/app/models"
 	"blog/app/services"
+	"blog/vendors/pagination"
 	configRedis "blog/vendors/redis/config"
 
 	"github.com/gin-gonic/gin"
@@ -21,6 +22,8 @@ func (i *ArticleController) Show(ctx *gin.Context) {
 	commentService := new(services.CommentService)
 	commentTree, commentPageData := commentService.GetTree(ctx.Request, 5, int(article.ID), "article")
 
+	paginator := pagination.CreatePaginator(commentPageData, 4)
+
 	articleService.Read(article)
 	article.Views += 1
 	config, err := configRedis.Get()
@@ -38,7 +41,7 @@ func (i *ArticleController) Show(ctx *gin.Context) {
 		"CommentArgs":     NewCommentModel(article.ID, "article"),
 		"CommentCount":    commentService.Count(article.ID, "article"),
 		"CommentTree":     commentTree,
-		"CommentPageData": commentPageData,
+		"PageLinks":       paginator.Links(),
 		"NewestComments":  commentService.News(),
 		"NavActive":       "",
 	})

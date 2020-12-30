@@ -3,7 +3,6 @@ package pagination
 import (
 	"blog/vendors/config"
 	"blog/vendors/types"
-	"fmt"
 	"math"
 	"net/http"
 	"strings"
@@ -23,6 +22,8 @@ type PagerData struct {
 	TotalPage int
 	// 基础路径
 	BaseUrl string
+	//分页名称
+	PageName string
 }
 
 // Pagination 分页对象
@@ -33,6 +34,7 @@ type Pagination struct {
 	db          *gorm.DB
 	association string
 	baseUrl     string
+	pageName    string
 }
 
 // New 分页对象构建器
@@ -40,7 +42,7 @@ type Pagination struct {
 // db —— GORM 查询句柄，用以查询数据集和获取数据总数
 // PerPage —— 每页条数，传参为小于或者等于 0 时为默认值  10，可通过 config/pagination.go 修改
 // association —— 关联的对象
-func New(r *http.Request, db *gorm.DB, PerPage int, association string) *Pagination {
+func New(r *http.Request, db *gorm.DB, PerPage int, association, pageName string) *Pagination {
 	// 默认每页数量
 	if PerPage <= 0 {
 		PerPage = config.GetInt("pagination.perPage")
@@ -53,9 +55,9 @@ func New(r *http.Request, db *gorm.DB, PerPage int, association string) *Paginat
 		Page:        1,
 		Count:       -1,
 		association: association,
-		baseUrl:     getBaseUrl(r),
+		pageName:    pageName,
 	}
-	fmt.Println(p.baseUrl)
+	p.baseUrl = p.getBaseUrl(r)
 
 	// 设置当前页码
 	p.SetPage(p.GetPageFromRequest(r))
@@ -71,6 +73,7 @@ func (p *Pagination) Paging() PagerData {
 		TotalCount:  p.TotalCount(),
 		TotalPage:   p.TotalPage(),
 		BaseUrl:     p.baseUrl,
+		PageName:    p.pageName,
 	}
 }
 
@@ -213,7 +216,7 @@ func (p Pagination) TotalPage() int {
 
 // GetPageFromRequest 从 URL 中获取 page 参数
 func (p Pagination) GetPageFromRequest(r *http.Request) int {
-	page := r.URL.Query().Get(config.GetString("pagination.url_query"))
+	page := r.URL.Query().Get(p.getPageName())
 	if page == "" {
 		return 1
 	}
@@ -230,13 +233,22 @@ func (p *Pagination) isNotAssociated() bool {
 }
 
 //isNotAssociated 是否未关联
-func getBaseUrl(r *http.Request) string {
+func (p Pagination) getBaseUrl(r *http.Request) string {
 	var query []string
-
 	for key, value := range r.URL.Query() {
-		if key != config.GetString("pagination.url_query") {
+		if key != p.getPageName() {
 			query = append(query, key+"="+value[0])
 		}
 	}
-	return strings.Join(query, "&")
+	if len(query) > 0 {
+		return r.URL.Path + "?" + strings.Join(query, "&")
+	}
+	return r.URL.Path
+}
+
+func (p Pagination) getPageName() string {
+	if p.pageName != "" {
+		return p.pageName
+	}
+	return config.GetString("pagination.url_query")
 }

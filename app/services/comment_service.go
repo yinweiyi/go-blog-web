@@ -106,7 +106,7 @@ func (c CommentService) GetTree(r *http.Request, perPage, commentableId int, com
 	}
 
 	db := model.DB.Model(models.Comment{}).Where(where).Order("id desc")
-	_pager := pagination.New(r, db, perPage, "")
+	_pager := pagination.New(r, db, perPage, "", "comment-page")
 
 	pagerData = _pager.Paging()
 	if err := _pager.Results(&topComments); err != nil {

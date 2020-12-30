@@ -3,7 +3,7 @@ package pagination
 import (
 	"blog/vendors/config"
 	"blog/vendors/types"
-	"fmt"
+	"strings"
 )
 
 type Paginator struct {
@@ -12,9 +12,9 @@ type Paginator struct {
 }
 
 type Slider struct {
-	first  map[int]string
-	slider map[int]string
-	last   map[int]string
+	first  []string
+	slider []string
+	last   []string
 }
 
 type Link struct {
@@ -47,13 +47,14 @@ func (p *Paginator) Links() []Link {
 		}
 		links = append(links, p.RangeLinks(slider.last)...)
 	}
-	links = append(links, Link{Url: "", Label: "›", Active: false})
+	links = append(links, Link{Url: p.NextUrl(), Label: "›", Active: false})
 	return links
 }
 
-func (p *Paginator) RangeLinks(slider map[int]string) []Link {
+func (p *Paginator) RangeLinks(slider []string) []Link {
 	var links []Link
-	for page, link := range slider {
+	for pa, link := range slider {
+		page := pa + 1
 		links = append(links, Link{
 			Url:    link,
 			Label:  types.IntToString(page),
@@ -110,10 +111,9 @@ func (p *Paginator) GetSmallSlider() Slider {
 	}
 }
 
-func (p *Paginator) GetUrlRange(start, end int) map[int]string {
-	pages := make(map[int]string)
+func (p *Paginator) GetUrlRange(start, end int) (pages []string) {
 	for i := start; i <= end; i++ {
-		pages[i] = p.Url(i)
+		pages = append(pages, p.Url(i))
 	}
 	return pages
 }
@@ -130,7 +130,24 @@ func (p *Paginator) PrevUrl() string {
 	return ""
 }
 
+func (p *Paginator) NextUrl() string {
+	if p.PagerData.CurrentPage < p.PagerData.TotalPage {
+		return p.Url(p.PagerData.CurrentPage + 1)
+	}
+	return ""
+}
+
 //Url
 func (p *Paginator) Url(currentPage int) string {
-	return fmt.Sprintf("%s=%d&%s", config.GetString("pagination.url_query"), currentPage, p.PagerData.BaseUrl)
+	if strings.Contains(p.PagerData.BaseUrl, "?") {
+		return p.PagerData.BaseUrl + "&" + p.getPageName() + "=" + types.IntToString(currentPage)
+	}
+	return p.PagerData.BaseUrl + "?" + p.getPageName() + "=" + types.IntToString(currentPage)
+}
+
+func (p *Paginator) getPageName() string {
+	if p.PagerData.PageName == "" {
+		return config.GetString("pagination.url_query")
+	}
+	return p.PagerData.PageName
 }

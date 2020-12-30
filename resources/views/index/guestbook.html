@@ -12,14 +12,19 @@
         </div><!-- /.blog-main -->
 
         {{if gt .Guestbook.ID 0}}
+        <div id="comments" style="height: auto !important;">
             {{if gt .CommentCount 0}}
-                <div id="comments" style="height: auto !important;">
-                    <h3> 关于 : 目前有 {{ .CommentCount }} 条评论</h3>
-                    {{template "comments" .CommentTree }}
-                </div>
+                <h3> 留言 : 目前有 {{ .CommentCount }} 条评论</h3>
+                {{template "comments" .CommentTree }}
+                <ul class="pagination">
+                    {{template "pagination" .}}
+                </ul>
             {{end}}
 
-        {{template "comment" .CommentArts }}
+            {{if gt .Guestbook.CanComment 1}}
+                {{template "comment" .CommentArts }}
+            {{end}}
+        </div>
         {{end}}
     </div>
     <div class="col-md-4">

@@ -28,7 +28,7 @@ func (TagService) GetBySlug(slug string) (models.Tag, error) {
 func (TagService) GetArticlesByTag(ctx *http.Request, tag models.Tag, perPage int) ([]models.Article, pagination.PagerData, error) {
 	db := model.DB.Model(&tag).Preload("Tags").Order("is_top desc, `order`")
 
-	_pager := pagination.New(ctx, db, perPage, "Articles")
+	_pager := pagination.New(ctx, db, perPage, "Articles", "comment-page")
 
 	// 2. 获取视图数据
 	PagerData := _pager.Paging()
