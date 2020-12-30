@@ -2,6 +2,7 @@ package routes
 
 import (
 	"blog/vendors/helpers"
+	"fmt"
 	"html/template"
 	"path/filepath"
 	"strings"
@@ -52,6 +53,7 @@ func loadTemplates(templatesDir string) multitemplate.Renderer {
 
 //获取文件名
 func fileName(path string) string {
+	fmt.Println(path)
 	pathArr := strings.Split(path, "\\")
 	pathArr = pathArr[len(pathArr)-2:]
 	return strings.Join(pathArr, "/")
