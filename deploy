@@ -10,3 +10,5 @@
 
 
 编译： env GOOS=linux GOARCH=amd64 go build main.go
+
+docker run --name local-redis -p 6379:6379 -d redis
