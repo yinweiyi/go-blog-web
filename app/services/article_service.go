@@ -26,16 +26,16 @@ func (a ArticleService) Read(article models.Article) {
 
 //Next
 func (a ArticleService) Next(article models.Article) models.Article {
-	var last models.Article
-	model.DB.Where("id < ?", article.ID).Select([]string{"id", "slug", "title"}).Order("id desc").First(&last)
-	return last
+	var next models.Article
+	model.DB.Where("id < ?", article.ID).Select([]string{"id", "slug", "title"}).Order("id desc").First(&next)
+	return next
 }
 
 //Last
 func (a ArticleService) Last(article models.Article) models.Article {
-	var next models.Article
-	model.DB.Where("id > ?", article.ID).Select([]string{"id", "slug", "title"}).Order("id").First(&next)
-	return next
+	var last models.Article
+	model.DB.Where("id > ?", article.ID).Select([]string{"id", "slug", "title"}).Order("id").First(&last)
+	return last
 }
 
 // GetAll 获取全部文章

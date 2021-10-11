@@ -3,8 +3,6 @@ package controllers
 import (
 	"blog/app/models/forms"
 	"blog/app/services"
-	cv "blog/vendors/validate"
-
 	"blog/vendors/validate"
 
 	"github.com/gin-gonic/gin"
@@ -36,7 +34,7 @@ func (c CommentController) Comment(ctx *gin.Context) {
 	}
 	validator := validate.GetValidator()
 	if err := validator.Struct(form); err != nil {
-		c.Error(ctx, cv.TranslateOverride(err), nil)
+		c.Error(ctx, validate.TranslateOverride(err), nil)
 		return
 	}
 	//验证码验证
